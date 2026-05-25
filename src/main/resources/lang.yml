@@ -1,0 +1,6 @@
+messages:
+  unauthorized: "You are not authorized to perform this action."
+  not_found: "The requested resource was not found."
+  bad_request: "Invalid request."
+  rate_limited: "Too many requests. Please try again later."
+  internal_error: "An internal server error occurred."

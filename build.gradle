@@ -59,4 +59,6 @@ dependencies {
 
     implementation 'net.atlantisservices:snowflake:1.0.0'
     implementation 'net.atlantisservices:ratelimiter:1.0.0'
+
+    implementation 'org.yaml:snakeyaml:2.6'
 }
