@@ -1,0 +1,62 @@
+plugins {
+    id 'org.jetbrains.kotlin.jvm' version '2.2.0'
+    id 'org.jetbrains.kotlin.plugin.serialization' version '2.3.0'
+    id 'com.gradleup.shadow' version '9.2.2'
+    id 'application'
+}
+
+application {
+    mainClass.set("wiki.vessel.mast.ApplicationKt")
+}
+
+kotlin {
+    jvmToolchain(21)
+}
+
+repositories {
+    mavenCentral()
+    maven { url = uri("https://repository.atlantisservices.net/repository/api/") }
+}
+
+configurations.all {
+    resolutionStrategy {
+        force 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3'
+        force 'org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.7.3'
+        force 'org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.7.3'
+        force 'org.jetbrains.kotlinx:kotlinx-coroutines-slf4j:1.7.3'
+    }
+}
+
+dependencies {
+    def ktorVersion = "2.3.7"
+    def exposedVersion = "0.61.0"
+
+    // Ktor
+    implementation "io.ktor:ktor-server-core-jvm:$ktorVersion"
+    implementation "io.ktor:ktor-server-netty-jvm:$ktorVersion"
+    implementation "io.ktor:ktor-server-auth-jvm:$ktorVersion"
+    implementation "io.ktor:ktor-server-auth-jwt-jvm:$ktorVersion"
+    implementation "io.ktor:ktor-server-content-negotiation-jvm:$ktorVersion"
+    implementation "io.ktor:ktor-serialization-kotlinx-json-jvm:$ktorVersion"
+    implementation "io.ktor:ktor-server-call-logging:$ktorVersion"
+    implementation "io.ktor:ktor-server-cors:$ktorVersion"
+    implementation "io.ktor:ktor-server-http-redirect:$ktorVersion"
+    implementation "io.ktor:ktor-server-forwarded-header:$ktorVersion"
+
+    // Database
+    implementation "org.jetbrains.exposed:exposed-core:$exposedVersion"
+    implementation "org.jetbrains.exposed:exposed-jdbc:$exposedVersion"
+    implementation "org.xerial:sqlite-jdbc:3.49.1.0"
+
+    // Auth
+    implementation 'org.mindrot:jbcrypt:0.4'
+    implementation 'com.auth0:java-jwt:4.4.0'
+    implementation 'dev.samstevens.totp:totp:1.7.1'
+
+    // Misc
+    implementation 'ch.qos.logback:logback-classic:1.4.14'
+    implementation 'io.github.cdimascio:dotenv-kotlin:6.4.1'
+
+    implementation 'net.atlantisservices:snowflake:1.0.0'
+    implementation 'net.atlantisservices:ratelimiter:1.0.0'
+}
