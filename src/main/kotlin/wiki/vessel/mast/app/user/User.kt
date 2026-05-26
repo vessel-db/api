@@ -7,19 +7,20 @@
 
 package wiki.vessel.mast.app.user
 
-import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import wiki.vessel.mast.app.Vessel
+import wiki.vessel.mast.app.util.PasswordUtil
 
 @Serializable
 data class User(
-    @SerialName("_id") val id: Long = Vessel.generator.nextId(),
+    val id: Long = Vessel.generator.nextId(),
+    val name: String,
     val passwordHash: String,
     val administrator: Boolean = false,
     val registeredAt: Long = System.currentTimeMillis(),
-
-    val passwordResetToken: String? = null,
-    val passwordResetTokenIssuedAt: Long? = null,
-
     val tokenVersion: Int = 0,
-    )
+)
+
+fun User.Companion.create(name: String, password: String): User {
+    return User(name = name, passwordHash = PasswordUtil.hash(password), administrator = true)
+}

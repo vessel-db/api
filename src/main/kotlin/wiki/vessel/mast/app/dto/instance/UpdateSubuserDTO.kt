@@ -5,12 +5,10 @@
  * root for license information.
  */
 
-package wiki.vessel.mast.app.dto.auth
+package wiki.vessel.mast.app.dto.instance
 
 import kotlinx.serialization.Serializable
+import wiki.vessel.mast.app.instance.InstancePermission
 
 @Serializable
-data class AuthenticationDTO(
-    val username: String,
-    val password: String,
-)
+data class UpdateSubuserDTO(val permissions: Set<InstancePermission>)

@@ -14,10 +14,17 @@ import io.ktor.server.response.respond
 import io.ktor.server.routing.*
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
+import net.atlantisservices.sdb.SdbRepository
 import net.atlantisservices.snowflake.SnowflakeService
 import org.slf4j.LoggerFactory
 import wiki.vessel.mast.app.config.AppConfig
+import wiki.vessel.mast.app.instance.Instance
+import wiki.vessel.mast.app.instance.InstanceService
+import wiki.vessel.mast.app.instance.InstanceSubuser
 import wiki.vessel.mast.app.service.ServiceRegistry
+import wiki.vessel.mast.app.user.User
+import wiki.vessel.mast.app.user.UserService
+import wiki.vessel.mast.app.user.create
 
 object Vessel {
 
@@ -28,6 +35,10 @@ object Vessel {
 
     private lateinit var server: NettyApplicationEngine
 
+    lateinit var users: SdbRepository<User>
+    lateinit var instances: SdbRepository<Instance>
+    lateinit var subusers: SdbRepository<InstanceSubuser>
+
     fun start() {
         if (::server.isInitialized) {
             logger.warn("Server already started.")
@@ -37,6 +48,8 @@ object Vessel {
         generator = SnowflakeService.default()
 
         ServiceRegistry.register(
+            UserService(),
+            InstanceService()
         )
 
         ServiceRegistry.startAll()
@@ -72,7 +85,9 @@ object Vessel {
                 )
             }
 
-            ServiceRegistry.registerRouting(this)
+            route("/v1") {
+                ServiceRegistry.registerRouting(this)
+            }
 
         }
 

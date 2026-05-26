@@ -11,8 +11,10 @@ import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import wiki.vessel.mast.app.Vessel
 import wiki.vessel.mast.app.config.AppConfig
 import wiki.vessel.mast.app.config.AppConfig.Environment.*
+import wiki.vessel.mast.app.config.JWTConfig
 import wiki.vessel.mast.app.dto.auth.AuthenticationDTO
 import wiki.vessel.mast.app.util.*
 import wiki.vessel.mast.app.util.ratelimit.RateLimiters
@@ -37,18 +39,22 @@ fun Route.userRoutes() {
                 return@post call.rateLimited()
             }
 
-            val userId = body.userId
+            val username = body.username
             val password = body.password
 
-            val token = ""
+            val user = Vessel.users.findBy("username", username)
+
+            if (user == null || !PasswordUtil.verify(user.passwordHash, password)) return@post call.unauthorized()
+
             val tokenLifespan = Duration.ofDays(30).toMillis()
+            val token = JWTConfig.generateToken(user, tokenLifespan)
 
             when (AppConfig.environment) {
 
                 DEVELOPMENT -> {
                     call.response.cookies.append(
                         name = "token",
-                        value = "",
+                        value = token,
                         httpOnly = true,
                         secure = call.isSecure,
                         path = "/",
@@ -87,6 +93,7 @@ fun Route.userRoutes() {
                         maxAge = 0L
                     )
                 }
+
                 PRODUCTION -> {
                     call.response.cookies.append(
                         name = "token",
