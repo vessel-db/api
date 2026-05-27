@@ -7,12 +7,12 @@
 
 package wiki.vessel.mast.app.util.translation
 
-enum class Message(val key: String) {
-    UNAUTHORIZED("unauthorized"),
-    NOT_FOUND("not_found"),
-    FORBIDDEN("forbidden"),
-    CONFLICT("conflict"),
-    BAD_REQUEST("bad_request"),
-    RATE_LIMITED("rate_limited"),
-    INTERNAL_ERROR("internal_error")
+object Message {
+    const val UNAUTHORIZED = "You are not authorized to perform this action."
+    const val NOT_FOUND = "The requested resource was not found."
+    const val CONFLICT = "This request cannot be performed safely"
+    const val FORBIDDEN = "You are not allowed to do this."
+    const val BAD_REQUEST = "Invalid request."
+    const val RATE_LIMITED = "Too many requests. Please try again later."
+    const val INTERNAL_ERROR = "An internal server error occurred."
 }

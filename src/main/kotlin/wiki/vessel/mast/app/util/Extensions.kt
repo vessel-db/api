@@ -19,20 +19,19 @@ import wiki.vessel.mast.app.config.JWTConfig
 import wiki.vessel.mast.app.instance.Instance
 import wiki.vessel.mast.app.instance.InstancePermission
 import wiki.vessel.mast.app.user.User
-import wiki.vessel.mast.app.util.translation.Lang
 import wiki.vessel.mast.app.util.translation.Message
 
-suspend fun ApplicationCall.respond(status: HttpStatusCode, message: Message) {
-    respond(status, mapOf("message" to Lang[message.key]))
+suspend fun ApplicationCall.message(status: HttpStatusCode, message: String) {
+    respond(status, mapOf("message" to message))
 }
 
 suspend fun ApplicationCall.ok(params: Map<String, String> = mapOf()) = respond(HttpStatusCode.OK, params)
-suspend fun ApplicationCall.unauthorized() = respond(HttpStatusCode.Unauthorized, Message.UNAUTHORIZED)
-suspend fun ApplicationCall.conflict() = respond(HttpStatusCode.Conflict, Message.CONFLICT)
-suspend fun ApplicationCall.forbidden() = respond(HttpStatusCode.Forbidden, Message.FORBIDDEN)
-suspend fun ApplicationCall.rateLimited() = respond(HttpStatusCode.TooManyRequests, Message.RATE_LIMITED)
-suspend fun ApplicationCall.notFound() = respond(HttpStatusCode.NotFound, Message.NOT_FOUND)
-suspend fun ApplicationCall.badRequest() = respond(HttpStatusCode.BadRequest, Message.BAD_REQUEST)
+suspend fun ApplicationCall.unauthorized() = message(HttpStatusCode.Unauthorized, Message.UNAUTHORIZED)
+suspend fun ApplicationCall.conflict() = message(HttpStatusCode.Conflict, Message.CONFLICT)
+suspend fun ApplicationCall.forbidden() = message(HttpStatusCode.Forbidden, Message.FORBIDDEN)
+suspend fun ApplicationCall.rateLimited() = message(HttpStatusCode.TooManyRequests, Message.RATE_LIMITED)
+suspend fun ApplicationCall.notFound() = message(HttpStatusCode.NotFound, Message.NOT_FOUND)
+suspend fun ApplicationCall.badRequest() = message(HttpStatusCode.BadRequest, Message.BAD_REQUEST)
 
 suspend fun ApplicationCall.requireAdmin(): User? {
     val user = toUser() ?: run { unauthorized(); return null }
@@ -46,7 +45,7 @@ suspend fun ApplicationCall.resolveInstance(instanceId: Long): Pair<Instance, Se
 
     if (instance.ownerId == user.id || user.administrator) return instance to null
 
-    val subuser = Vessel.subusers.findBy("instanceId" to instanceId, "userId" to user.id)
+    val subuser = Vessel.subusers.findById(user.id)
         ?: run { forbidden(); return null }
 
     return instance to subuser.permissions

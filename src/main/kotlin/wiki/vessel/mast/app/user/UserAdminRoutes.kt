@@ -41,12 +41,12 @@ fun Route.userAdminRoutes() {
             val admin = call.requireAdmin() ?: return@post
             val body = call.toBody<CreateUserDTO>() ?: return@post call.badRequest()
 
-            if (Vessel.users.findBy("name", body.name) != null) {
+            if (Vessel.users.findBy("name", body.username) != null) {
                 return@post call.conflict()
             }
 
             val user = User(
-                name = body.name,
+                username = body.username,
                 passwordHash = PasswordUtil.hash(body.password),
                 administrator = body.administrator
             )

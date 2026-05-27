@@ -14,13 +14,13 @@ import wiki.vessel.mast.app.util.PasswordUtil
 @Serializable
 data class User(
     val id: Long = Vessel.generator.nextId(),
-    val name: String,
+    val username: String,
     val passwordHash: String,
     val administrator: Boolean = false,
     val registeredAt: Long = System.currentTimeMillis(),
     val tokenVersion: Int = 0,
 )
 
-fun User.Companion.create(name: String, password: String): User {
-    return User(name = name, passwordHash = PasswordUtil.hash(password), administrator = true)
+fun User.Companion.create(username: String, password: String): User {
+    return User(username = username, passwordHash = PasswordUtil.hash(password), administrator = true)
 }

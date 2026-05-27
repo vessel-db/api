@@ -7,11 +7,19 @@
 
 package wiki.vessel.mast.app
 
+import io.ktor.http.ContentType
+import io.ktor.http.HttpHeaders
+import io.ktor.http.HttpMethod
+import io.ktor.serialization.kotlinx.json.json
 import io.ktor.server.application.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
-import io.ktor.server.response.respond
+import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.server.plugins.cors.routing.CORS
+import io.ktor.server.request.acceptItems
+import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
 import net.atlantisservices.sdb.SdbRepository
@@ -24,7 +32,6 @@ import wiki.vessel.mast.app.instance.InstanceSubuser
 import wiki.vessel.mast.app.service.ServiceRegistry
 import wiki.vessel.mast.app.user.User
 import wiki.vessel.mast.app.user.UserService
-import wiki.vessel.mast.app.user.create
 
 object Vessel {
 
@@ -73,6 +80,48 @@ object Vessel {
     }
 
     private fun Application.module() {
+
+        if (AppConfig.environment == AppConfig.Environment.PRODUCTION) {
+            intercept(ApplicationCallPipeline.Plugins) {
+                val acceptsHtml = call.request.acceptItems()
+                    .any { it.value.equals(ContentType.Text.Html.toString(), ignoreCase = true) }
+
+                if (acceptsHtml) {
+                    call.respondRedirect(AppConfig.panelUrl)
+                    finish()
+                }
+            }
+        }
+
+        install(ContentNegotiation) {
+            json(
+                Json {
+                    prettyPrint = true
+                    isLenient = true
+                    ignoreUnknownKeys = true
+                }
+            )
+        }
+
+        install(CORS) {
+            allowHost("localhost:4321", schemes = listOf("http"))
+            allowHost(
+                AppConfig.panelUrl.replace("http://", "").replace("https://", ""),
+                schemes = listOf("https", "http")
+            )
+
+            allowCredentials = true
+
+            allowMethod(HttpMethod.Options)
+            allowMethod(HttpMethod.Get)
+            allowMethod(HttpMethod.Post)
+            allowMethod(HttpMethod.Put)
+            allowMethod(HttpMethod.Patch)
+            allowMethod(HttpMethod.Delete)
+
+            allowHeader(HttpHeaders.Authorization)
+            allowHeader(HttpHeaders.ContentType)
+        }
 
         routing {
 

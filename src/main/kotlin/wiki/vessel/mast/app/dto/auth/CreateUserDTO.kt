@@ -10,4 +10,4 @@ package wiki.vessel.mast.app.dto.auth
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class CreateUserDTO(val name: String, val password: String, val administrator: Boolean = false)
+data class CreateUserDTO(val username: String, val password: String, val administrator: Boolean = false)
