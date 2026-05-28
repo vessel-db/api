@@ -38,6 +38,7 @@ object Vessel {
     private lateinit var server: NettyApplicationEngine
 
     lateinit var users: SdbRepository<User>
+    lateinit var nodes: SdbRepository<Node>
 
     fun start() {
         if (::server.isInitialized) {
