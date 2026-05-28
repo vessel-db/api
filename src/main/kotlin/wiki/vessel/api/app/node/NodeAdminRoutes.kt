@@ -41,7 +41,7 @@ fun Route.nodeAdminRoutes() {
             val id = call.parameters["id"] ?: return@delete call.badRequest()
             val node = Vessel.nodes.findById(id) ?: return@delete call.notFound()
 
-            Vessel.nodes.delete(node)
+            Vessel.nodes.deleteById(node.id)
             call.ok()
         }
 

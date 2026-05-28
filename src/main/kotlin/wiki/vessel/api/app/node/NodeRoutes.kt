@@ -8,25 +8,27 @@
 package wiki.vessel.api.app.node
 
 import io.ktor.http.*
-import io.ktor.server.application.call
+import io.ktor.server.application.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import wiki.vessel.api.app.Vessel
-import wiki.vessel.api.app.dto.node.CreateNodeDTO
-import wiki.vessel.api.app.util.*
+import wiki.vessel.api.app.util.badRequest
+import wiki.vessel.api.app.util.notFound
+import wiki.vessel.api.app.util.toUser
+import wiki.vessel.api.app.util.unauthorized
 
 fun Route.nodeRoutes() {
 
     route("/nodes") {
 
         get {
-            val user = call.toUser() ?: return@get call.unauthorized()
+            call.toUser() ?: return@get call.unauthorized()
 
             call.respond(HttpStatusCode.OK, Vessel.nodes.findAll())
         }
 
         get("/{id}") {
-            val user = call.toUser() ?: return@get call.unauthorized()
+            call.toUser() ?: return@get call.unauthorized()
 
             val id = call.parameters["id"] ?: return@get call.badRequest()
             val node = Vessel.nodes.findById(id) ?: return@get call.notFound()

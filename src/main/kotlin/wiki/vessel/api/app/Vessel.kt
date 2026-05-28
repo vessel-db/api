@@ -24,6 +24,8 @@ import net.atlantisservices.sdb.SdbRepository
 import net.atlantisservices.snowflake.SnowflakeService
 import org.slf4j.LoggerFactory
 import wiki.vessel.api.app.config.AppConfig
+import wiki.vessel.api.app.node.Node
+import wiki.vessel.api.app.node.NodeService
 import wiki.vessel.api.app.service.ServiceRegistry
 import wiki.vessel.api.app.user.User
 import wiki.vessel.api.app.user.UserService
@@ -50,6 +52,7 @@ object Vessel {
 
         ServiceRegistry.register(
             UserService(),
+            NodeService()
         )
 
         ServiceRegistry.startAll()

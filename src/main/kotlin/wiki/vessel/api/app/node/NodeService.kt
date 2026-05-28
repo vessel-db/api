@@ -14,7 +14,7 @@ import wiki.vessel.api.app.service.Service
 import wiki.vessel.api.app.service.ServicePriority
 
 class NodeService : Service() {
-    override val name: String = "mast"
+    override val name: String = "node"
     override val priority: ServicePriority = ServicePriority.CRITICAL
 
     override fun start() {
