@@ -6,7 +6,7 @@ plugins {
 }
 
 application {
-    mainClass.set("wiki.vessel.mast.ApplicationKt")
+    mainClass.set("wiki.vessel.api.ApplicationKt")
 }
 
 kotlin {
