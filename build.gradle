@@ -29,7 +29,6 @@ configurations.all {
 
 dependencies {
     def ktorVersion = "2.3.7"
-    def exposedVersion = "0.61.0"
 
     // Ktor
     implementation "io.ktor:ktor-server-core-jvm:$ktorVersion"
@@ -46,15 +45,12 @@ dependencies {
     // Auth
     implementation 'org.mindrot:jbcrypt:0.4'
     implementation 'com.auth0:java-jwt:4.4.0'
-    implementation 'dev.samstevens.totp:totp:1.7.1'
 
     // Misc
-    implementation 'ch.qos.logback:logback-classic:1.4.14'
     implementation 'io.github.cdimascio:dotenv-kotlin:6.4.1'
 
     implementation 'net.atlantisservices:snowflake:1.0.0'
     implementation 'net.atlantisservices:ratelimiter:1.0.0'
     implementation 'net.atlantisservices:sdb:1.0.1'
 
-    implementation 'org.yaml:snakeyaml:2.6'
 }
