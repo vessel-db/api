@@ -44,7 +44,7 @@ fun Route.userRoutes() {
 
             val user = Vessel.users.findBy("username", username)
 
-            if (user == null || !PasswordUtil.verify(user.passwordHash, password)) return@post call.unauthorized()
+            if (user == null || !PasswordUtil.verify(user.passwordHash, password)) return@post call.respond(HttpStatusCode.Unauthorized)
 
             val tokenLifespan = Duration.ofDays(30).toMillis()
             val token = JWTConfig.generateToken(user, tokenLifespan)
