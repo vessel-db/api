@@ -20,7 +20,7 @@ fun Route.nodeAdminRoutes() {
     route("/nodes") {
 
         post {
-            val user = call.requireAdmin() ?: return@post
+            call.requireAdmin() ?: return@post
 
             val body = call.toBody<CreateNodeDTO>() ?: return@post call.badRequest()
 
@@ -36,7 +36,7 @@ fun Route.nodeAdminRoutes() {
         }
 
         delete("/{id}") {
-            val user = call.requireAdmin() ?: return@delete
+            call.requireAdmin() ?: return@delete
 
             val id = call.parameters["id"] ?: return@delete call.badRequest()
             val node = Vessel.nodes.findById(id) ?: return@delete call.notFound()

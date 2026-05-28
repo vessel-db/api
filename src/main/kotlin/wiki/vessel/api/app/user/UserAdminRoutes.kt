@@ -33,12 +33,14 @@ fun Route.userAdminRoutes() {
     route("/admin/users") {
 
         get {
-            val admin = call.requireAdmin() ?: return@get
+            call.requireAdmin() ?: return@get
+
             call.respond(HttpStatusCode.OK, Vessel.users.findAll())
         }
 
         post {
-            val admin = call.requireAdmin() ?: return@post
+            call.requireAdmin() ?: return@post
+
             val body = call.toBody<CreateUserDTO>() ?: return@post call.badRequest()
 
             if (Vessel.users.findBy("name", body.username) != null) {
