@@ -29,6 +29,7 @@ import wiki.vessel.api.app.node.NodeService
 import wiki.vessel.api.app.service.ServiceRegistry
 import wiki.vessel.api.app.user.User
 import wiki.vessel.api.app.user.UserService
+import wiki.vessel.api.app.util.VersionUtil
 
 object Vessel {
 
@@ -126,6 +127,15 @@ object Vessel {
                     buildJsonObject {
                         put("status", "ok")
                         put("time", System.currentTimeMillis().toString())
+                    }
+                )
+            }
+
+            get("/version") {
+                call.respond(
+                    buildJsonObject {
+                        put("version", "1.0.0")
+                        put("latestVersion", VersionUtil.fetchLatest())
                     }
                 )
             }
